@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cartilha de IA | Aluga.com</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,600;1,700;1,800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #233038;
+  --bg-light: #2a3a43;
+  --bg-card: #2c3d47;
+  --bg-card-hover: #334751;
+  --orange: #FD6900;
+  --orange-light: #ff8a33;
+  --orange-glow: rgba(253,105,0,0.15);
+  --green: #4CAF7D;
+  --green-bg: rgba(76,175,125,0.08);
+  --green-border: rgba(76,175,125,0.2);
+  --yellow: #E8B84B;
+  --yellow-bg: rgba(232,184,75,0.08);
+  --yellow-border: rgba(232,184,75,0.2);
+  --red: #E85C5C;
+  --red-bg: rgba(232,92,92,0.08);
+  --red-border: rgba(232,92,92,0.2);
+  --text: #FFFFFF;
+  --text-secondary: #b0bec5;
+  --text-muted: #78909c;
+  --ring: rgba(255,255,255,0.04);
+  --border: rgba(255,255,255,0.08);
+  --border-hover: rgba(255,255,255,0.14);
+  --font: 'Poppins', Tahoma, sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--orange) var(--bg);}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.7;overflow-x:hidden;}
+
+/* Concentric rings background */
+.rings-bg{position:fixed;top:50%;left:55%;transform:translate(-50%,-50%);width:1200px;height:1200px;pointer-events:none;z-index:0;opacity:0.35;}
+.rings-bg .ring{position:absolute;border-radius:50%;border:1px solid var(--ring);}
+.rings-bg .ring:nth-child(1){top:10%;left:10%;width:80%;height:80%;}
+.rings-bg .ring:nth-child(2){top:18%;left:18%;width:64%;height:64%;}
+.rings-bg .ring:nth-child(3){top:26%;left:26%;width:48%;height:48%;}
+.rings-bg .ring:nth-child(4){top:34%;left:34%;width:32%;height:32%;}
+.rings-bg .ring:nth-child(5){top:42%;left:42%;width:16%;height:16%;}
+
+/* Orange decorative circle */
+.deco-circle{position:fixed;border-radius:50%;pointer-events:none;z-index:0;}
+.deco-circle.large{width:400px;height:400px;background:var(--orange-glow);top:20%;right:-5%;}
+.deco-circle.small{width:120px;height:120px;background:rgba(255,255,255,0.03);bottom:10%;left:5%;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(35,48,56,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 2rem;}
+nav .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;}
+nav .logo{font-weight:700;font-size:1.15rem;color:#fff;letter-spacing:0.02em;}
+nav .logo span{color:var(--orange);}
+nav .nav-links{display:flex;gap:0.25rem;list-style:none;}
+nav .nav-links a{color:var(--text-secondary);text-decoration:none;font-size:0.75rem;font-weight:500;padding:0.4rem 0.75rem;border-radius:6px;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.04em;}
+nav .nav-links a:hover,nav .nav-links a.active{color:#fff;background:rgba(255,255,255,0.06);}
+.menu-toggle{display:none;background:none;border:none;color:#fff;font-size:1.5rem;cursor:pointer;}
+
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:6rem 2rem 4rem;overflow:hidden;}
+.hero-content{position:relative;z-index:2;max-width:820px;}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:var(--orange-glow);border:1px solid rgba(253,105,0,0.25);color:var(--orange-light);font-size:0.7rem;font-weight:600;padding:0.4rem 1rem;border-radius:100px;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:2rem;animation:fadeInUp 0.8s ease;}
+.hero-badge .dot{width:6px;height:6px;background:var(--orange);border-radius:50%;animation:pulse 2s ease infinite;}
+.hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;font-style:italic;line-height:1.08;letter-spacing:-0.02em;margin-bottom:1.5rem;animation:fadeInUp 0.8s ease 0.1s both;}
+.hero h1 .highlight{color:var(--orange);}
+.hero p{font-size:1.05rem;font-weight:400;color:var(--text-secondary);max-width:560px;margin:0 auto 2.5rem;line-height:1.8;animation:fadeInUp 0.8s ease 0.2s both;}
+.hero-cta{display:inline-flex;align-items:center;gap:0.5rem;background:transparent;color:var(--orange);font-weight:600;font-size:0.88rem;padding:0.8rem 2rem;border-radius:8px;border:2px solid var(--orange);text-decoration:none;transition:all 0.3s;animation:fadeInUp 0.8s ease 0.3s both;}
+.hero-cta:hover{background:var(--orange);color:#fff;box-shadow:0 8px 30px rgba(253,105,0,0.3);}
+.scroll-indicator{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:0.5rem;color:var(--text-muted);font-size:0.65rem;letter-spacing:0.1em;text-transform:uppercase;animation:fadeInUp 1s ease 0.5s both;}
+.scroll-indicator .line{width:1px;height:40px;background:linear-gradient(to bottom, var(--orange), transparent);animation:scrollPulse 2s ease infinite;}
+
+section{position:relative;z-index:1;padding:6rem 2rem;}
+.container{max-width:1100px;margin:0 auto;}
+.section-label{display:inline-flex;align-items:center;gap:0.5rem;font-size:0.68rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--orange);margin-bottom:1rem;}
+.section-label::before{content:'';width:20px;height:2px;background:var(--orange);border-radius:1px;}
+.section-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:700;font-style:italic;letter-spacing:-0.01em;line-height:1.15;margin-bottom:1rem;}
+.section-subtitle{font-size:0.95rem;font-weight:400;color:var(--text-secondary);max-width:600px;line-height:1.8;margin-bottom:3rem;}
+
+.ai-intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2rem;}
+.ai-intro-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:2rem;transition:all 0.3s;}
+.ai-intro-card:hover{border-color:var(--border-hover);background:var(--bg-card-hover);transform:translateY(-2px);}
+.card-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:1.2rem;}
+.card-icon svg{width:24px;height:24px;}
+.ai-intro-card h3{font-size:1.05rem;font-weight:600;margin-bottom:0.6rem;}
+.ai-intro-card p{color:var(--text-secondary);font-size:0.88rem;line-height:1.7;font-weight:400;}
+
+.scenarios-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;}
+.scenario-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:1.75rem;transition:all 0.3s;position:relative;overflow:hidden;}
+.scenario-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0;opacity:0;transition:opacity 0.3s;}
+.scenario-card:hover::before{opacity:1;}
+.scenario-card:hover{border-color:var(--border-hover);transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,0.2);}
+.scenario-card .dept{font-size:0.65rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.6rem;}
+.scenario-card h3{font-size:0.95rem;font-weight:600;margin-bottom:0.5rem;}
+.scenario-card p{color:var(--text-secondary);font-size:0.82rem;line-height:1.7;font-weight:400;}
+.scenario-card .example{margin-top:0.75rem;padding:0.65rem 0.85rem;background:rgba(253,105,0,0.05);border-left:2px solid var(--orange);border-radius:0 8px 8px 0;font-size:0.76rem;color:var(--text-secondary);font-style:italic;}
+.sc-comercial .dept{color:var(--orange);} .sc-comercial::before{background:var(--orange);}
+.sc-logistica .dept{color:#5BB5D5;} .sc-logistica::before{background:#5BB5D5;}
+.sc-suporte .dept{color:var(--green);} .sc-suporte::before{background:var(--green);}
+.sc-rh .dept{color:var(--yellow);} .sc-rh::before{background:var(--yellow);}
+.sc-juridico .dept{color:var(--red);} .sc-juridico::before{background:var(--red);}
+.sc-financeiro .dept{color:#90CAF9;} .sc-financeiro::before{background:#90CAF9;}
+
+.traffic-section{background:var(--bg-light);border-radius:24px;padding:3.5rem;border:1px solid var(--border);}
+.traffic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;margin-top:2rem;}
+.traffic-col{border-radius:16px;padding:1.5rem;border:1px solid var(--border);}
+.traffic-col.green{background:var(--green-bg);border-color:var(--green-border);}
+.traffic-col.yellow{background:var(--yellow-bg);border-color:var(--yellow-border);}
+.traffic-col.red{background:var(--red-bg);border-color:var(--red-border);}
+.traffic-header{display:flex;align-items:center;gap:0.6rem;margin-bottom:1.25rem;}
+.traffic-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;}
+.green .traffic-dot{background:var(--green);box-shadow:0 0 12px rgba(76,175,125,0.4);}
+.yellow .traffic-dot{background:var(--yellow);box-shadow:0 0 12px rgba(232,184,75,0.4);}
+.red .traffic-dot{background:var(--red);box-shadow:0 0 12px rgba(232,92,92,0.4);}
+.traffic-col h3{font-size:0.9rem;font-weight:600;}
+.green h3{color:var(--green);} .yellow h3{color:var(--yellow);} .red h3{color:var(--red);}
+.traffic-col ul{list-style:none;display:flex;flex-direction:column;gap:0.65rem;}
+.traffic-col li{font-size:0.82rem;color:var(--text-secondary);line-height:1.6;padding-left:1.3rem;position:relative;font-weight:400;}
+.traffic-col li::before{position:absolute;left:0;content:'';}
+.green li::before{top:6px;width:7px;height:7px;border:2px solid var(--green);border-radius:50%;}
+.yellow li::before{top:4px;width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-bottom:8px solid var(--yellow);}
+.red li::before{top:9px;width:8px;height:2px;background:var(--red);}
+.traffic-note{text-align:center;margin-top:1.5rem;font-size:0.75rem;color:var(--text-muted);display:flex;align-items:center;justify-content:center;gap:0.5rem;}
+
+.prompt-examples{display:flex;flex-direction:column;gap:1.25rem;margin-top:2rem;}
+.prompt-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;overflow:hidden;transition:all 0.3s;}
+.prompt-card:hover{border-color:var(--border-hover);}
+.prompt-header{padding:1.25rem 1.75rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.prompt-header h3{font-size:0.92rem;font-weight:600;display:flex;align-items:center;gap:0.75rem;}
+.prompt-header .tag{font-size:0.6rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:4px;background:var(--orange-glow);color:var(--orange);}
+.prompt-card .arrow{color:var(--text-muted);transition:transform 0.3s;font-size:1.2rem;}
+.prompt-card.open .arrow{transform:rotate(180deg);}
+.prompt-body{max-height:0;overflow:hidden;transition:max-height 0.4s ease;}
+.prompt-card.open .prompt-body{max-height:500px;}
+.prompt-body-inner{padding:0 1.75rem 1.5rem;}
+.prompt-bad,.prompt-good{border-radius:10px;padding:1rem 1.25rem;margin-bottom:0.75rem;font-size:0.82rem;line-height:1.6;}
+.prompt-label{font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:0.4rem;}
+.prompt-bad{background:var(--red-bg);border:1px solid var(--red-border);}
+.prompt-bad .prompt-label{color:var(--red);}
+.prompt-bad p{color:var(--text-secondary);}
+.prompt-good{background:var(--green-bg);border:1px solid var(--green-border);}
+.prompt-good .prompt-label{color:var(--green);}
+.prompt-good p{color:var(--text-secondary);}
+.prompt-tip{font-size:0.76rem;color:var(--text-muted);margin-top:0.5rem;padding-left:0.75rem;border-left:2px solid var(--orange);}
+
+.myths-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-top:2rem;}
+.myth-card{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;overflow:hidden;cursor:pointer;transition:all 0.3s;}
+.myth-card:hover{border-color:var(--border-hover);transform:translateY(-2px);}
+.myth-front,.myth-back{padding:1.75rem;}
+.myth-front{display:flex;align-items:flex-start;gap:1rem;}
+.myth-back{display:none;background:var(--green-bg);border-top:1px solid var(--border);}
+.myth-card.flipped .myth-back{display:block;}
+.myth-icon{width:40px;height:40px;border-radius:10px;background:var(--red-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.myth-icon svg{width:18px;height:18px;}
+.myth-card.flipped .myth-icon{background:var(--green-bg);}
+.myth-front h3{font-size:0.88rem;font-weight:600;margin-bottom:0.3rem;color:var(--red);}
+.myth-card.flipped .myth-front h3{color:var(--green);}
+.myth-front p{font-size:0.82rem;color:var(--text-secondary);line-height:1.6;font-weight:400;}
+.myth-front .flip-hint{font-size:0.65rem;color:var(--text-muted);margin-top:0.5rem;}
+.myth-back h4{font-size:0.85rem;font-weight:600;color:var(--green);margin-bottom:0.5rem;}
+.myth-back p{font-size:0.82rem;color:var(--text-secondary);line-height:1.7;font-weight:400;}
+
+.quiz-section{background:var(--bg-light);border-radius:24px;padding:3.5rem;border:1px solid var(--border);}
+.quiz-progress{display:flex;gap:0.4rem;margin-bottom:2rem;}
+.quiz-progress .bar{flex:1;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;}
+.quiz-progress .bar.done{background:var(--orange);}
+.quiz-progress .bar.current{background:linear-gradient(90deg,var(--orange) 50%,rgba(255,255,255,0.06) 50%);animation:quizPulse 1.5s ease infinite;}
+.quiz-question{margin-bottom:2rem;}
+.quiz-question h3{font-size:1.1rem;font-weight:600;margin-bottom:0.5rem;}
+.quiz-question .q-number{font-size:0.7rem;color:var(--orange);font-weight:600;}
+.quiz-options{display:flex;flex-direction:column;gap:0.65rem;}
+.quiz-option{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:0.9rem 1.15rem;cursor:pointer;transition:all 0.2s;font-size:0.85rem;color:var(--text-secondary);display:flex;align-items:center;gap:0.75rem;font-weight:400;}
+.quiz-option:hover{border-color:var(--border-hover);background:var(--bg-card-hover);color:#fff;}
+.quiz-option .opt-letter{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;color:var(--text-muted);flex-shrink:0;}
+.quiz-option.correct{border-color:var(--green-border);background:var(--green-bg);color:#fff;}
+.quiz-option.correct .opt-letter{background:var(--green);color:#fff;}
+.quiz-option.wrong{border-color:var(--red-border);background:var(--red-bg);}
+.quiz-option.wrong .opt-letter{background:var(--red);color:#fff;}
+.quiz-option.disabled{pointer-events:none;}
+.quiz-feedback{margin-top:1rem;padding:1rem 1.25rem;border-radius:10px;font-size:0.82rem;line-height:1.6;display:none;}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.correct-fb{background:var(--green-bg);border:1px solid var(--green-border);color:var(--green);}
+.quiz-feedback.wrong-fb{background:var(--red-bg);border:1px solid var(--red-border);color:var(--red);}
+.quiz-nav{margin-top:1.5rem;display:flex;justify-content:flex-end;}
+.quiz-nav button{background:var(--orange);color:#fff;border:none;padding:0.7rem 1.5rem;border-radius:8px;font-weight:600;font-size:0.82rem;cursor:pointer;transition:all 0.2s;font-family:var(--font);display:none;}
+.quiz-nav button.show{display:inline-flex;}
+.quiz-nav button:hover{background:var(--orange-light);transform:translateY(-1px);}
+.quiz-result{text-align:center;display:none;}
+.quiz-result.show{display:block;}
+.quiz-result .score{font-size:3.5rem;font-weight:800;color:var(--orange);}
+.quiz-result p{color:var(--text-secondary);font-size:1rem;margin-top:0.5rem;}
+
+.commitment{text-align:center;padding:5rem 2rem;}
+.commitment-box{max-width:700px;margin:0 auto;background:var(--bg-card);border:1px solid var(--border);border-radius:24px;padding:3.5rem;}
+.commitment-box h2{font-size:1.7rem;font-weight:700;font-style:italic;margin-bottom:1.25rem;}
+.commitment-box p{color:var(--text-secondary);font-size:0.9rem;line-height:1.8;margin-bottom:1rem;font-weight:400;}
+.commitment-box .sig{margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--border);font-size:0.75rem;color:var(--text-muted);}
+.commitment-box .sig strong{color:var(--text-secondary);display:block;margin-bottom:0.2rem;}
+
+footer{text-align:center;padding:2.5rem 2rem 2rem;border-top:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:1rem;}
+footer .dcom-logo{height:22px;opacity:0.35;transition:opacity 0.3s;filter:invert(1);}
+footer .dcom-logo:hover{opacity:0.6;}
+footer .footer-text{font-size:0.7rem;color:var(--text-muted);}
+
+@keyframes fadeInUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
+@keyframes scrollPulse{0%,100%{opacity:1;transform:scaleY(1);}50%{opacity:0.3;transform:scaleY(0.6);}}
+@keyframes quizPulse{0%,100%{opacity:1;}50%{opacity:0.7;}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+@media(max-width:900px){.ai-intro-grid,.myths-grid{grid-template-columns:1fr;}.scenarios-grid{grid-template-columns:1fr 1fr;}.traffic-grid{grid-template-columns:1fr;}.traffic-section,.quiz-section{padding:2rem;}}
+@media(max-width:640px){section{padding:4rem 1.25rem;}.scenarios-grid{grid-template-columns:1fr;}nav .nav-links{display:none;}nav .nav-links.open{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:rgba(35,48,56,0.97);backdrop-filter:blur(20px);padding:1rem;border-bottom:1px solid var(--border);}.menu-toggle{display:block;}.commitment-box{padding:2rem;}}
+</style>
+</head>
+<body>
+
+<!-- Concentric rings -->
+<div class="rings-bg"><div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="ring"></div></div>
+<div class="deco-circle large"></div>
+<div class="deco-circle small"></div>
+
+<nav>
+  <div class="nav-inner">
+    <div class="logo">aluga<span>.com</span></div>
+    <button class="menu-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="#oque">O que &eacute; IA</a></li>
+      <li><a href="#cenarios">Cen&aacute;rios</a></li>
+      <li><a href="#regras">O que pode</a></li>
+      <li><a href="#prompts">Prompts</a></li>
+      <li><a href="#mitos">Mitos</a></li>
+      <li><a href="#quiz">Quiz</a></li>
+    </ul>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge"><span class="dot"></span> Cartilha Interna</div>
+    <h1>Intelig&ecirc;ncia Artificial.<br><span class="highlight">Simples e ponto.</span></h1>
+    <p>Um guia pr&aacute;tico para usar IA no dia a dia da Aluga.com &mdash; com responsabilidade, intelig&ecirc;ncia e sem complica&ccedil;&atilde;o.</p>
+    <a href="#oque" class="hero-cta">Come&ccedil;ar a leitura &#8595;</a>
+  </div>
+  <div class="scroll-indicator"><span>Role para explorar</span><div class="line"></div></div>
+</section>
+
+<section id="oque"><div class="container">
+  <div class="reveal"><div class="section-label">Cap&iacute;tulo 01</div><h2 class="section-title">O que &eacute; IA, afinal?</h2><p class="section-subtitle">Intelig&ecirc;ncia Artificial &eacute; a capacidade de m&aacute;quinas aprenderem padr&otilde;es a partir de dados e tomarem decis&otilde;es ou gerarem conte&uacute;do com base nesses padr&otilde;es. N&atilde;o &eacute; m&aacute;gica &mdash; &eacute; estat&iacute;stica avan&ccedil;ada a servi&ccedil;o da produtividade.</p></div>
+  <div class="ai-intro-grid reveal">
+    <div class="ai-intro-card"><div class="card-icon" style="background:var(--orange-glow);"><svg viewBox="0 0 24 24" fill="none" stroke="#FD6900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div><h3>IA Preditiva</h3><p>Analisa dados hist&oacute;ricos para prever tend&ecirc;ncias. Assim como nosso sistema identifica o notebook ideal para cada cliente, a IA preditiva encontra padr&otilde;es para otimizar decis&otilde;es de neg&oacute;cio.</p></div>
+    <div class="ai-intro-card"><div class="card-icon" style="background:rgba(91,181,213,0.12);"><svg viewBox="0 0 24 24" fill="none" stroke="#5BB5D5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg></div><h3>IA Generativa</h3><p>Cria textos, imagens, c&oacute;digos e apresenta&ccedil;&otilde;es a partir de instru&ccedil;&otilde;es. &Eacute; como ter um assistente que redige e-mails, respostas a clientes e relat&oacute;rios a partir de um breve comando seu.</p></div>
+    <div class="ai-intro-card"><div class="card-icon" style="background:rgba(76,175,125,0.12);"><svg viewBox="0 0 24 24" fill="none" stroke="#4CAF7D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 1 4 4v2h-8V6a4 4 0 0 1 4-4z"/><rect x="5" y="8" width="14" height="12" rx="2"/><circle cx="12" cy="15" r="2"/></svg></div><h3>Automa&ccedil;&atilde;o inteligente</h3><p>Executa tarefas repetitivas com autonomia: triagem de chamados, classifica&ccedil;&atilde;o de documentos, envio de alertas. Libera tempo para o que realmente exige intelig&ecirc;ncia humana.</p></div>
+    <div class="ai-intro-card"><div class="card-icon" style="background:rgba(232,184,75,0.12);"><svg viewBox="0 0 24 24" fill="none" stroke="#E8B84B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><h3>Assistentes virtuais</h3><p>Chatbots e copilots que entendem linguagem natural. Ferramentas como o ChatGPT, Copilot e Claude podem auxiliar em tarefas do dia a dia com agilidade surpreendente.</p></div>
+  </div>
+</div></section>
+
+<section id="cenarios" style="background:var(--bg-light);"><div class="container">
+  <div class="reveal"><div class="section-label">Cap&iacute;tulo 02</div><h2 class="section-title">IA no nosso dia a dia</h2><p class="section-subtitle">Veja como cada setor da Aluga pode se beneficiar de ferramentas de IA no cotidiano.</p></div>
+  <div class="scenarios-grid reveal">
+    <div class="scenario-card sc-comercial"><div class="dept">Comercial</div><h3>Propostas e follow-up</h3><p>Gera&ccedil;&atilde;o de textos para propostas comerciais, e-mails de follow-up personalizados e scripts de abordagem.</p><div class="example">&ldquo;Reescreva este e-mail de follow-up para o cliente X em tom mais consultivo.&rdquo;</div></div>
+    <div class="scenario-card sc-logistica"><div class="dept">Log&iacute;stica</div><h3>Previs&atilde;o de demanda</h3><p>An&aacute;lise de padr&otilde;es de loca&ccedil;&atilde;o para prever picos de demanda e otimizar a gest&atilde;o do estoque de equipamentos.</p><div class="example">&ldquo;Analise os dados dos &uacute;ltimos 6 meses e projete a demanda de notebooks para o pr&oacute;ximo trimestre.&rdquo;</div></div>
+    <div class="scenario-card sc-suporte"><div class="dept">Suporte T&eacute;cnico</div><h3>Triagem de chamados</h3><p>Classifica&ccedil;&atilde;o autom&aacute;tica de tickets por prioridade e categoria, com sugest&atilde;o de resolu&ccedil;&atilde;o baseada em hist&oacute;rico.</p><div class="example">&ldquo;Classifique este chamado e sugira uma resolu&ccedil;&atilde;o com base nos casos similares anteriores.&rdquo;</div></div>
+    <div class="scenario-card sc-rh"><div class="dept">RH</div><h3>Triagem de curr&iacute;culos</h3><p>Pr&eacute;-sele&ccedil;&atilde;o de candidatos com base em crit&eacute;rios definidos, liberando o RH para a etapa humana das entrevistas.</p><div class="example">&ldquo;Resuma os pontos fortes e fracos destes 3 curr&iacute;culos para a vaga de analista de log&iacute;stica.&rdquo;</div></div>
+    <div class="scenario-card sc-juridico"><div class="dept">Jur&iacute;dico / Compliance</div><h3>An&aacute;lise de contratos</h3><p>Revis&atilde;o assistida de cl&aacute;usulas contratuais, identifica&ccedil;&atilde;o de riscos e apoio na conformidade com a LGPD.</p><div class="example">&ldquo;Identifique cl&aacute;usulas de risco neste contrato de fornecedor e sugira adequa&ccedil;&otilde;es &agrave; LGPD.&rdquo;</div></div>
+    <div class="scenario-card sc-financeiro"><div class="dept">Financeiro</div><h3>Relat&oacute;rios e an&aacute;lises</h3><p>Gera&ccedil;&atilde;o de resumos financeiros, an&aacute;lise de indicadores e cria&ccedil;&atilde;o de dashboards a partir de dados brutos.</p><div class="example">&ldquo;Crie um resumo executivo dos indicadores financeiros deste trimestre a partir da planilha anexa.&rdquo;</div></div>
+  </div>
+</div></section>
+
+<section id="regras"><div class="container">
+  <div class="reveal"><div class="section-label">Cap&iacute;tulo 03</div><h2 class="section-title">O que pode e o que n&atilde;o pode</h2><p class="section-subtitle">Regras claras para um uso seguro, &eacute;tico e em conformidade com a LGPD.</p></div>
+  <div class="traffic-section reveal">
+    <div class="traffic-grid">
+      <div class="traffic-col green"><div class="traffic-header"><div class="traffic-dot"></div><h3>Pode usar</h3></div><ul><li>Redigir e revisar e-mails e textos internos</li><li>Gerar ideias, brainstorming e planejamento</li><li>Criar resumos de reuni&otilde;es e atas</li><li>Pesquisar conceitos t&eacute;cnicos e tirar d&uacute;vidas</li><li>Formatar planilhas, relat&oacute;rios e apresenta&ccedil;&otilde;es</li><li>Traduzir documentos gen&eacute;ricos</li></ul></div>
+      <div class="traffic-col yellow"><div class="traffic-header"><div class="traffic-dot"></div><h3>Use com cautela</h3></div><ul><li>Dados internos n&atilde;o sens&iacute;veis (valide com seu gestor)</li><li>An&aacute;lises financeiras parciais sem dados de clientes</li><li>Textos que ser&atilde;o publicados externamente (revise sempre)</li><li>Informa&ccedil;&otilde;es sobre processos internos da empresa</li><li>Conte&uacute;do que mencione parceiros ou fornecedores</li></ul></div>
+      <div class="traffic-col red"><div class="traffic-header"><div class="traffic-dot"></div><h3>Nunca fa&ccedil;a</h3></div><ul><li>Inserir dados pessoais de clientes (CPF, CNPJ, e-mail, telefone)</li><li>Compartilhar senhas, tokens ou credenciais</li><li>Enviar contratos com dados reais para IA externa</li><li>Usar IA para decis&otilde;es que afetem pessoas sem revis&atilde;o humana</li><li>Tratar a resposta da IA como verdade absoluta sem checar</li><li>Copiar e colar outputs sem revis&atilde;o cr&iacute;tica</li></ul></div>
+    </div>
+    <div class="traffic-note"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#78909c" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>Em caso de d&uacute;vida, consulte o DPO (Encarregado de Prote&ccedil;&atilde;o de Dados) da empresa.</div>
+  </div>
+</div></section>
+
+<section id="prompts" style="background:var(--bg-light);"><div class="container">
+  <div class="reveal"><div class="section-label">Cap&iacute;tulo 04</div><h2 class="section-title">Prompt como superpoder</h2><p class="section-subtitle">A qualidade da resposta da IA depende diretamente da qualidade da sua instru&ccedil;&atilde;o. Veja como transformar pedidos vagos em resultados precisos.</p></div>
+  <div class="prompt-examples reveal">
+    <div class="prompt-card"><div class="prompt-header" onclick="togglePrompt(this)"><h3><span class="tag">Comercial</span> E-mail de follow-up</h3><span class="arrow">&#9662;</span></div><div class="prompt-body"><div class="prompt-body-inner"><div class="prompt-bad"><div class="prompt-label">Prompt fraco</div><p>&ldquo;Escreve um e-mail de follow-up.&rdquo;</p></div><div class="prompt-good"><div class="prompt-label">Prompt forte</div><p>&ldquo;Redija um e-mail de follow-up para um cliente corporativo que solicitou or&ccedil;amento de 50 notebooks h&aacute; 5 dias e n&atilde;o respondeu. Tom: consultivo e cordial, sem press&atilde;o. M&aacute;ximo 6 linhas. Assinatura: [seu nome], Executivo Comercial &mdash; Aluga.com.&rdquo;</p></div><div class="prompt-tip">Dica: quanto mais contexto (quem, o qu&ecirc;, quando, tom, tamanho), melhor o resultado.</div></div></div></div>
+    <div class="prompt-card"><div class="prompt-header" onclick="togglePrompt(this)"><h3><span class="tag">Suporte</span> Resposta a chamado</h3><span class="arrow">&#9662;</span></div><div class="prompt-body"><div class="prompt-body-inner"><div class="prompt-bad"><div class="prompt-label">Prompt fraco</div><p>&ldquo;Responda esse chamado.&rdquo;</p></div><div class="prompt-good"><div class="prompt-label">Prompt forte</div><p>&ldquo;O cliente reportou que o notebook Lenovo V15 n&atilde;o liga ap&oacute;s atualiza&ccedil;&atilde;o de BIOS. Redija uma resposta t&eacute;cnica orientando: (1) hard reset, (2) acesso ao modo de recupera&ccedil;&atilde;o de BIOS. Tom: emp&aacute;tico e profissional. Finalize perguntando se o problema persiste para agendar suporte presencial.&rdquo;</p></div><div class="prompt-tip">Dica: inclua o modelo do equipamento e o problema espec&iacute;fico &mdash; a IA entende contexto t&eacute;cnico.</div></div></div></div>
+    <div class="prompt-card"><div class="prompt-header" onclick="togglePrompt(this)"><h3><span class="tag">Financeiro</span> Resumo executivo</h3><span class="arrow">&#9662;</span></div><div class="prompt-body"><div class="prompt-body-inner"><div class="prompt-bad"><div class="prompt-label">Prompt fraco</div><p>&ldquo;Resume esses dados financeiros.&rdquo;</p></div><div class="prompt-good"><div class="prompt-label">Prompt forte</div><p>&ldquo;A partir da tabela abaixo com receita, despesa e margem dos &uacute;ltimos 3 meses, crie um resumo executivo de 1 par&aacute;grafo destacando: (1) tend&ecirc;ncia geral, (2) principal ponto de aten&ccedil;&atilde;o, (3) oportunidade identificada. P&uacute;blico: diretoria. Tom: objetivo e direto.&rdquo;</p></div><div class="prompt-tip">Dica: defina o p&uacute;blico-alvo &mdash; a IA ajusta vocabul&aacute;rio e n&iacute;vel de detalhe automaticamente.</div></div></div></div>
+  </div>
+</div></section>
+
+<section id="mitos"><div class="container">
+  <div class="reveal"><div class="section-label">Cap&iacute;tulo 05</div><h2 class="section-title">Mitos vs. Realidade</h2><p class="section-subtitle">Clique em cada card para revelar a realidade por tr&aacute;s dos mitos mais comuns sobre IA.</p></div>
+  <div class="myths-grid reveal">
+    <div class="myth-card" onclick="this.classList.toggle('flipped')"><div class="myth-front"><div class="myth-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E85C5C" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div><h3>Mito</h3><p>&ldquo;A IA vai substituir meu trabalho.&rdquo;</p><div class="flip-hint">Clique para ver a realidade &rarr;</div></div></div><div class="myth-back"><h4>Realidade</h4><p>A IA substitui tarefas, n&atilde;o pessoas. Profissionais que usam IA ser&atilde;o mais produtivos e valorizados. O diferencial &eacute; a capacidade humana de julgar, negociar, criar rela&ccedil;&otilde;es e tomar decis&otilde;es &eacute;ticas.</p></div></div>
+    <div class="myth-card" onclick="this.classList.toggle('flipped')"><div class="myth-front"><div class="myth-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E85C5C" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div><h3>Mito</h3><p>&ldquo;Tudo que a IA gera &eacute; verdade.&rdquo;</p><div class="flip-hint">Clique para ver a realidade &rarr;</div></div></div><div class="myth-back"><h4>Realidade</h4><p>IAs generativas podem &ldquo;alucinar&rdquo; &mdash; gerar informa&ccedil;&otilde;es plaus&iacute;veis mas incorretas. Toda resposta deve ser validada por voc&ecirc;. A IA &eacute; uma ferramenta de apoio, n&atilde;o um or&aacute;culo.</p></div></div>
+    <div class="myth-card" onclick="this.classList.toggle('flipped')"><div class="myth-front"><div class="myth-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E85C5C" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div><h3>Mito</h3><p>&ldquo;Posso colocar qualquer dado na IA.&rdquo;</p><div class="flip-hint">Clique para ver a realidade &rarr;</div></div></div><div class="myth-back"><h4>Realidade</h4><p>Ferramentas de IA externas podem usar seus dados para treinamento. Nunca insira dados pessoais, financeiros ou contratuais de clientes. Siga sempre as diretrizes da LGPD e da pol&iacute;tica interna.</p></div></div>
+    <div class="myth-card" onclick="this.classList.toggle('flipped')"><div class="myth-front"><div class="myth-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#E85C5C" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div><div><h3>Mito</h3><p>&ldquo;IA &eacute; s&oacute; para quem entende de tecnologia.&rdquo;</p><div class="flip-hint">Clique para ver a realidade &rarr;</div></div></div><div class="myth-back"><h4>Realidade</h4><p>As ferramentas modernas de IA funcionam com linguagem natural &mdash; voc&ecirc; conversa como se falasse com um colega. N&atilde;o &eacute; preciso saber programar. Basta saber fazer boas perguntas.</p></div></div>
+  </div>
+</div></section>
+
+<section id="quiz" style="background:var(--bg-light);"><div class="container">
+  <div class="reveal"><div class="section-label">Teste seus conhecimentos</div><h2 class="section-title">Quiz r&aacute;pido</h2><p class="section-subtitle">5 perguntas para consolidar o que voc&ecirc; aprendeu nesta cartilha.</p></div>
+  <div class="quiz-section reveal" id="quizContainer"><div class="quiz-progress" id="quizProgress"></div><div id="quizBody"></div><div class="quiz-result" id="quizResult"><div class="score" id="quizScore"></div><p id="quizMessage"></p></div></div>
+</div></section>
+
+<section class="commitment"><div class="container reveal">
+  <div class="commitment-box">
+    <div class="section-label" style="justify-content:center;">Nosso compromisso</div>
+    <h2>Uso respons&aacute;vel de IA na Aluga.com</h2>
+    <p>A Aluga.com acredita que a intelig&ecirc;ncia artificial &eacute; uma aliada poderosa quando utilizada com &eacute;tica, transpar&ecirc;ncia e responsabilidade. Nosso compromisso &eacute; capacitar cada colaborador para que use essas ferramentas de forma segura, produtiva e em total conformidade com a LGPD e com nossos valores de simplicidade e parceria.</p>
+    <p>Esta cartilha &eacute; um primeiro passo. A inova&ccedil;&atilde;o &eacute; cont&iacute;nua &mdash; e n&oacute;s fazemos isso juntos.</p>
+    <div class="sig"><strong>Gest&atilde;o Aluga.com</strong>Simples e ponto.</div>
+  </div>
+</div></section>
+
+<footer>
+  <img src="data:image/png;base64,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" alt="dcom" class="dcom-logo">
+  <div class="footer-text">Cartilha de IA &mdash; Aluga.com &middot; Produzida em parceria com dcom &middot; 2026</div>
+</footer>
+
+<script>
+var reveals=document.querySelectorAll('.reveal');
+var observer=new IntersectionObserver(function(entries){entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:0.1});
+reveals.forEach(function(r){observer.observe(r);});
+var sections=document.querySelectorAll('section[id]');
+var navLinks=document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll',function(){var current='';sections.forEach(function(s){if(window.scrollY>=s.offsetTop-200)current=s.id;});navLinks.forEach(function(l){l.classList.remove('active');if(l.getAttribute('href')==='#'+current)l.classList.add('active');});});
+function togglePrompt(el){var card=el.closest('.prompt-card');var wasOpen=card.classList.contains('open');document.querySelectorAll('.prompt-card').forEach(function(c){c.classList.remove('open');});if(!wasOpen)card.classList.add('open');}
+var quizData=[
+{q:"Voc\u00ea pode inserir o CPF de um cliente em uma ferramenta de IA externa para gerar um relat\u00f3rio?",opts:["Sim, se for para uso interno","N\u00e3o, nunca insira dados pessoais em IA externa","Sim, se o cliente autorizou verbalmente","Depende do tipo de relat\u00f3rio"],correct:1,fb_ok:"Correto! Dados pessoais de clientes nunca devem ser inseridos em ferramentas de IA externas. Isso viola a LGPD e as pol\u00edticas internas.",fb_wrong:"A resposta correta \u00e9: nunca inserir dados pessoais em IA externa. Isso viola a LGPD e pode gerar incidentes de seguran\u00e7a."},
+{q:"Qual \u00e9 a melhor pr\u00e1tica ao usar a resposta de uma IA generativa?",opts:["Copiar e colar diretamente \u2014 a IA \u00e9 precisa","Revisar criticamente antes de usar","Ignorar se parecer errado e pedir de novo","Publicar sem altera\u00e7\u00f5es para ganhar tempo"],correct:1,fb_ok:"Exato! Toda resposta de IA deve ser validada por voc\u00ea. A IA pode gerar informa\u00e7\u00f5es plaus\u00edveis mas incorretas (alucina\u00e7\u00f5es).",fb_wrong:"Lembre-se: a IA pode \u2018alucinar\u2019. Sempre revise criticamente qualquer output antes de utilizar."},
+{q:"O que torna um prompt mais eficaz?",opts:["Ser o mais curto poss\u00edvel","Incluir contexto, tom, p\u00fablico e formato desejado","Usar linguagem t\u00e9cnica de programa\u00e7\u00e3o","Repetir a pergunta v\u00e1rias vezes"],correct:1,fb_ok:"Perfeito! Um bom prompt inclui contexto (quem, o qu\u00ea, para quem), o tom desejado e o formato esperado.",fb_wrong:"O segredo de um bom prompt \u00e9 contexto: defina quem, o qu\u00ea, para quem, em que tom e formato."},
+{q:"A IA generativa vai substituir os profissionais da Aluga?",opts:["Sim, \u00e9 quest\u00e3o de tempo","N\u00e3o \u2014 a IA substitui tarefas, n\u00e3o pessoas","Apenas os cargos operacionais","S\u00f3 se a empresa decidir"],correct:1,fb_ok:"Isso mesmo! A IA automatiza tarefas repetitivas, mas o julgamento, a criatividade e as rela\u00e7\u00f5es humanas continuam sendo insubstitu\u00edveis.",fb_wrong:"A IA substitui tarefas, n\u00e3o pessoas. Profissionais que dominam IA se tornam mais produtivos e valorizados."},
+{q:"Em caso de d\u00favida sobre o que pode ou n\u00e3o ser inserido em uma ferramenta de IA, o que voc\u00ea deve fazer?",opts:["Perguntar a um colega","Consultar o DPO (Encarregado de Prote\u00e7\u00e3o de Dados)","Testar e ver se d\u00e1 problema","Enviar mesmo assim, depois corrige"],correct:1,fb_ok:"Correto! O DPO \u00e9 o ponto focal para d\u00favidas sobre tratamento de dados e uso seguro de ferramentas de IA.",fb_wrong:"Sempre consulte o DPO da empresa. Ele \u00e9 o respons\u00e1vel por orientar sobre o tratamento adequado de dados."}
+];
+var currentQ=0,score=0,answered=false;
+function renderQuiz(){var prog=document.getElementById('quizProgress');prog.innerHTML=quizData.map(function(_,i){return '<div class="bar '+(i<currentQ?'done':i===currentQ?'current':'')+'"></div>';}).join('');var body=document.getElementById('quizBody');var d=quizData[currentQ],letters=['A','B','C','D'];body.innerHTML='<div class="quiz-question"><div class="q-number">Pergunta '+(currentQ+1)+' de '+quizData.length+'</div><h3>'+d.q+'</h3></div><div class="quiz-options">'+d.opts.map(function(o,i){return '<div class="quiz-option" onclick="answerQuiz('+i+')"><div class="opt-letter">'+letters[i]+'</div><span>'+o+'</span></div>';}).join('')+'</div><div class="quiz-feedback" id="qfb"></div><div class="quiz-nav"><button id="nextBtn" onclick="nextQuestion()">Pr\u00f3xima \u2192</button></div>';answered=false;}
+function answerQuiz(idx){if(answered)return;answered=true;var d=quizData[currentQ],opts=document.querySelectorAll('.quiz-option');opts.forEach(function(o,i){o.classList.add('disabled');if(i===d.correct)o.classList.add('correct');if(i===idx&&idx!==d.correct)o.classList.add('wrong');});var fb=document.getElementById('qfb');if(idx===d.correct){score++;fb.className='quiz-feedback show correct-fb';fb.textContent=d.fb_ok;}else{fb.className='quiz-feedback show wrong-fb';fb.textContent=d.fb_wrong;}var btn=document.getElementById('nextBtn');btn.classList.add('show');btn.textContent=currentQ<quizData.length-1?'Pr\u00f3xima \u2192':'Ver resultado';}
+function nextQuestion(){currentQ++;if(currentQ>=quizData.length)showResult();else renderQuiz();}
+function showResult(){document.getElementById('quizBody').style.display='none';document.getElementById('quizProgress').style.display='none';var res=document.getElementById('quizResult');res.classList.add('show');document.getElementById('quizScore').textContent=score+'/'+quizData.length;var pct=(score/quizData.length)*100;var msg='';if(pct===100)msg='Excelente! Voc\u00ea domina o uso respons\u00e1vel de IA.';else if(pct>=60)msg='Muito bem! Voc\u00ea est\u00e1 no caminho certo. Revise os pontos que errou.';else msg='Vale a pena reler a cartilha com aten\u00e7\u00e3o. Conhecimento \u00e9 poder!';document.getElementById('quizMessage').textContent=msg;}
+renderQuiz();
+</script>
+</body>
+</html>
